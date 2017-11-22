@@ -1,0 +1,86 @@
+[{
+        "expression": "1d20+(3+0)",
+        "results": {
+            "resultType": "sum",
+            "rolls": [{
+                    "dice": 1,
+                    "results": [{ "v": 20 }],
+                    "rollid": "-Kz_GkQPjzZM3qfGqIrl",
+                    "sides": 20,
+                    "type": "R"
+                },
+                { "expr": "+(3+0)", "type": "M" }
+            ],
+            "total": 23,
+            "type": "V"
+        },
+        "rollid": "-Kz_GkQPjzZM3qfGqIrl",
+        "signature": "12af526fb3d714513c01b3848e37fed111948d4ba84697899723c19c6a6fe27cc59109bb4da2abe972b18bfd9e1d3cc64cf7250d79b14aa61aaddaeb6b7275c3",
+        "tdseed": 1117100042594621600
+    }, {
+        "expression": "1d20+(3+0)",
+        "results": {
+            "resultType": "sum",
+            "rolls": [{
+                "dice": 1,
+                "results": [{ "v": 18 }],
+                "rollid": "-Kz_GkQQJ8_nOZGSv0aF",
+                "sides": 20,
+                "type": "R"
+            }, { "expr": "+(3+0)", "type": "M" }],
+            "total": 21,
+            "type": "V"
+        },
+        "rollid": "-Kz_GkQQJ8_nOZGSv0aF",
+        "signature": "343d14487eac29db7fcba68f93333ddb6542960f7e52a38b96ab7d5f5154de61431a7c27b6562f3e8efe8eed2439a5a2d23bbb71bfc0f96ff7167575e4567a14",
+        "tdseed": 4408163120458513400
+    }, {
+        "expression": "1d6 + 1+0",
+        "results": {
+            "resultType": "sum",
+            "rolls": [{
+                "dice": 1,
+                "results": [{ "v": 4 }],
+                "rollid": "-Kz_GkQQJ8_nOZGSv0aG",
+                "sides": 6,
+                "type": "R"
+            }, { "expr": "+1+0", "type": "M" }],
+            "total": 5,
+            "type": "V"
+        },
+        "rollid": "-Kz_GkQQJ8_nOZGSv0aG",
+        "signature": "86187fa40ba9ac20b9b0b5de1b30f0e29ac0ebffd88c2d7713f0dfd4c7023cbeedf3602992b5eef80deffd14ccd885dca23513b19653b1d55d05b46c7b731d15",
+        "tdseed": 4500179642250938400
+    }, {
+        "expression": "+0",
+        "results": { "resultType": "M", "rolls": [{ "expr": 0, "type": "M" }], "total": 0, "type": "V" },
+        "signature": false
+    }, {
+        "expression": "1d6+0",
+        "results": {
+            "resultType": "sum",
+            "rolls": [{
+                "dice": 1,
+                "results": [{ "v": 4 }],
+                "rollid": "-Kz_GkQQJ8_nOZGSv0aH",
+                "sides": 6,
+                "type": "R"
+            }, { "expr": "+0", "type": "M" }],
+            "total": 4,
+            "type": "V"
+        },
+        "rollid": "-Kz_GkQQJ8_nOZGSv0aH",
+        "signature": "8bbb9648a97831a45962c1f864f5d0d04a90fbe1d2551e244606a9f5b56e7afdf6161aac020be2b6d9677924586216ef8931d4616faa2bbff81a0c7a70e31dd8",
+        "tdseed": 6173350427134978000
+    },
+    {
+        "expression": "+0",
+        "results": { 
+            "resultType": "M", 
+            "rolls": [{ "expr": 0, "type": "M" }], 
+            "total": 0, 
+            "type": "V" 
+        },
+        "signature": false
+    }
+]
