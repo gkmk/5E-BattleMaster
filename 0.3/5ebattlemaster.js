@@ -55,15 +55,35 @@ var BattleMaster = BattleMaster || (function() {
             case "OGL":
                 log("using OGL sheet");
                 this.bRequiresSavingThrow = (universalizeString(rollMsg.content).indexOf("saveattr") != -1);
-                var r1Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{r1=$[[") + 8, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{r1=$[[") + 8,"]]")),10),
-                r2Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{r2=$[[") + 8, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{r2=$[[") + 8,"]]")),10),
+                r1Index = parseInt(stringBetween(rollMsg.content,"{{r1=$[[","]]"),10);
+                log('VRNIIII BATEEEEEEEE '+stringBetween(rollMsg.content,"{{r1=$[[","]]"))
+                if (stringBetween(rollMsg.content,"{{r2=$[[","]]") != "") {                    
+                    r2Index = parseInt(stringBetween(rollMsg.content,"{{r2=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{dmg1=$[[","]]")!="") {
+                    log('SO VRAKAS BATEEEEEEEE '+stringBetween(rollMsg.content,"{{dmg1=$[[","]]"))
+                    dmg1Index = parseInt(stringBetween(rollMsg.content,"{{dmg1=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{dmg2=$[[","]]")!="") {
+                    dmg2Index = parseInt(stringBetween(rollMsg.content,"{{dmg1=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{crit1=$[[","]]")!="") {
+                    crit1Index = parseInt(stringBetween(rollMsg.content,"{{crit1=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{crit2=$[[","]]")!="") {
+                    crit2Index = parseInt(stringBetween(rollMsg.content,"{{crit2=$[[","]]"),10);
+                }
+                
+                dmgType1 = stringBetween(rollMsg.content,"{{dmg1type=","}}"),
+                dmgType2 = stringBetween(rollMsg.content,"{{dmg2type=","}}");
+
+                if (dmg1Index<=0) {
+                    // two dice roll vs 4 dice
+                    dmg1Index = r2Index;
+                    r2Index = -1;
+                }
+
                 saveDCIndex = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{savedc=$[[") + 12, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{savedc=$[[") + 12,"]]")),10),
-                dmg1Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{dmg1=$[[") + 10, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{dmg1=$[[") + 10,"]]")),10),
-                //dmg2Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{savedc=$[[") + 12, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{savedc=$[[") + 12,"]]")),10),
-                crit1Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{crit1=$[[") + 11, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{crit1=$[[") + 11,"]]")),10),
-                //crit2Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{savedc=$[[") + 12, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{savedc=$[[") + 12,"]]")),10),
-                dmgType1 = rollMsg.content.substring(rollMsg.content.indexOf("dmg1type=") + 9, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("dmg1type=") + 9,"}}"));
-                //dmgType2 = rollMsg.content.substring(rollMsg.content.indexOf("dmg2type=") + 9, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("dmg2type=") + 9,"}}")),
                 this.rangeString = rollMsg.content.substring(rollMsg.content.indexOf("{{range=") + 8, firstIndexAfter(rollMsg.content, rollMsg.content.indexOf("{{range=") + 8, "}}"));
                 this.saveType = rollMsg.content.substring(rollMsg.content.indexOf("{{saveattr=") + 11, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("saveattr=") + 11,"}}"));
                 this.saveEffects = rollMsg.content.substring(rollMsg.content.indexOf("savedesc=") + 9, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("savedesc=") + 9,"}}"));
@@ -109,6 +129,10 @@ var BattleMaster = BattleMaster || (function() {
             break;
         }
         log("r1index = "+ r1Index);
+        log("r2Index = "+ r2Index);
+        log("saveDCIndex = "+ saveDCIndex);
+        log("dmg1Index = "+ dmg1Index);
+        log("dmg2Index = "+ dmg2Index);
         if(r1Index != -1){this.d20Rolls.push(inlineData[r1Index]);}
         if(r2Index != -1){this.d20Rolls.push(inlineData[r2Index]);}
         if(saveDCIndex != -1){this.dc = inlineData[saveDCIndex]; log("SaveDCIndex isn't negative one!");}
@@ -176,13 +200,11 @@ var BattleMaster = BattleMaster || (function() {
     },
 
     stringBetween = function(totalString, startString, endString){
-        var s = totalString.substring(totalString.indexOf(startString) + startString.length, firstIndexAfter(totalString,totalString.indexOf(startString) + startString.length,endString));
-        if(s){
-            return s;
+        var res = new RegExp(startString.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')+'(.*?)'+endString.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi').exec(totalString);
+        if (res) {
+            return res[1];
         }
-        else{
-            return "";
-        }
+        return "";
     },
     
     /*Makes the API buttons used throughout the script*/
