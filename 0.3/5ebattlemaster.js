@@ -1052,20 +1052,23 @@ var BattleMaster = BattleMaster || (function() {
                 if(!vulnerabilitiesRaw){vulnerabilitiesRaw="";}
             break;
         }
-        var tempHP = targetToken.get('bar2_value');
-        if(immunitiesRaw != undefined && universalizeString(immunitiesRaw).indexOf(universalizeString(dmgType)) != -1){
+        var tempHP = targetToken.get('bar3_value');
+        log('TARGET HP = ' + tempHP);
+        if (immunitiesRaw != undefined && dmgType != "" && universalizeString(immunitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
+             log('appply immunities');
             if(state.bDeathMarkersPlusInstalled){
                 Deathmarkers.UpdateDeathMarkers(targetToken);
             }
             return;
         } 
         else if(tempHP >= 0){
-            if(vulnerabilitiesRaw != undefined && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1){
+            log('has HP');
+            if (vulnerabilitiesRaw != undefined && dmgType != "" && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 if(tempHP >= Math.round(2*dmgAmt)){
-                    targetToken.set('bar2_value', tempHP - Math.round(2*dmgAmt));
+                    targetToken.set('bar3_value', tempHP - Math.round(2*dmgAmt));
                 }
                 else{
-                    targetToken.set('bar2_value', 0);
+                    targetToken.set('bar3_value', 0);
                     var dmgLeft = Math.round(2*dmgAmt) - tempHP;
                     targetToken.set('bar3_value', targetToken.get('bar3_value') - dmgLeft);
                 }
@@ -1074,12 +1077,12 @@ var BattleMaster = BattleMaster || (function() {
                 }
                 return;
             }
-            else if(resistancesRaw != undefined && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1){
+            else if (resistancesRaw != undefined && dmgType != "" && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 if(tempHP >= Math.round(dmgAmt/2)){
-                    targetToken.set('bar2_value', tempHP - Math.round(dmgAmt/2));
+                    targetToken.set('bar3_value', tempHP - Math.round(dmgAmt/2));
                 }
                 else{
-                    targetToken.set('bar2_value', 0);
+                    targetToken.set('bar3_value', 0);
                     var dmgLeft = Math.round(dmgAmt/2) - tempHP;
                     targetToken.set('bar3_value', targetToken.get('bar3_value') - dmgLeft);
                 }
@@ -1091,10 +1094,10 @@ var BattleMaster = BattleMaster || (function() {
             }
             else{
                 if(tempHP >= dmgAmt){
-                    targetToken.set('bar2_value', tempHP - dmgAmt);
+                    targetToken.set('bar3_value', tempHP - dmgAmt);
                 }
                 else{
-                    targetToken.set('bar2_value', 0);
+                    targetToken.set('bar3_value', 0);
                     var dmgLeft = dmgAmt - tempHP;
                     targetToken.set('bar3_value', targetToken.get('bar3_value') - dmgLeft);
                 }
@@ -1105,14 +1108,15 @@ var BattleMaster = BattleMaster || (function() {
             }
         }
         else{
-            if(vulnerabilitiesRaw != undefined && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1){
+            log('HP 0');
+            if (vulnerabilitiesRaw != undefined && dmgType != "" && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(2*dmgAmt));
                 if(state.bDeathMarkersPlusInstalled){
                     Deathmarkers.UpdateDeathMarkers(targetToken);
                 }
                 return;
             }
-            else if(resistancesRaw != undefined && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1){
+            else if (resistancesRaw != undefined && dmgType != "" && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 log(targetCharacter.get('name') + " has resistance to " + dmgType +" damage!")
                 targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(dmgAmt/2));
                 if(state.bDeathMarkersPlusInstalled){
