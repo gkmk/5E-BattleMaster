@@ -21,7 +21,7 @@ var BattleMaster = BattleMaster || (function() {
                     'border': '1px solid #cccccc',
                     'border-radius': '1em',
                     'background-color': '#006dcc',
-                    'margin': '0 .1em',
+                    'margin': '.1em',
                     'font-weight': 'bold',
                     'padding': '.1em 1em',
                     'color': 'white'
@@ -29,11 +29,8 @@ var BattleMaster = BattleMaster || (function() {
             }
         },
     templates = {};
-    if(!state.bDeathMarkersPlusInstalled){
-        state.bDeathMarkersPlusInstalled = false;
-    }
     if(!state.sCharacterSheetType){
-        state.sCharacterSheetType = "Shaped";
+        state.sCharacterSheetType = "OGL";
     }
     /* OBJECTS */
     function rollData(rollMsg){
@@ -41,7 +38,7 @@ var BattleMaster = BattleMaster || (function() {
         var inlineData = rollMsg.inlinerolls;
         var r1Index = -1, r2Index = -1, dmg1Index = -1, dmg2Index = -1, crit1Index = -1, crit2Index = -1, saveDCIndex = -1;
         //log("Inline data: " + JSON.stringify(inlineData));
-        //log("rollMsg.content = " +rollMsg.content);
+        log("rollMsg.content = " +rollMsg.content);
         this.playerid = rollMsg.playerid;
         this.d20Rolls = [];
         this.dmgRolls = [];
@@ -81,10 +78,18 @@ var BattleMaster = BattleMaster || (function() {
                     r2Index = -1;
                 }
 
-                saveDCIndex = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{savedc=$[[") + 12, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{savedc=$[[") + 12,"]]")),10),
-                this.rangeString = rollMsg.content.substring(rollMsg.content.indexOf("{{range=") + 8, firstIndexAfter(rollMsg.content, rollMsg.content.indexOf("{{range=") + 8, "}}"));
-                this.saveType = rollMsg.content.substring(rollMsg.content.indexOf("{{saveattr=") + 11, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("saveattr=") + 11,"}}"));
-                this.saveEffects = rollMsg.content.substring(rollMsg.content.indexOf("savedesc=") + 9, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("savedesc=") + 9,"}}"));
+                if (stringBetween(rollMsg.content,"{{savedc=$[[","]]")!="") {
+                    saveDCIndex = parseInt(stringBetween(rollMsg.content,"{{savedc=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{range=$[[","]]")!="") {
+                    this.rangeString = parseInt(stringBetween(rollMsg.content,"{{range=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{saveattr=$[[","]]")!="") {
+                    this.saveType = parseInt(stringBetween(rollMsg.content,"{{saveattr=$[[","]]"),10);
+                }
+                if (stringBetween(rollMsg.content,"{{savedesc=$[[","]]")!="") {
+                    this.saveEffects = parseInt(stringBetween(rollMsg.content,"{{savedesc=$[[","]]"),10);
+                }
             break;
             case "Shaped":
                 //log("using Shaped sheet");
@@ -319,18 +324,19 @@ var BattleMaster = BattleMaster || (function() {
             //log("Reticle token isn't null!");
             _.each(JSON.parse(Campaign().get('turnorder')), function(token){
                 token = getObj('graphic', token.id);
-                //log("Testing token " + token.id);
-                //log("Token coords: (" + token.get('left') + ", " + token.get('top'));
+                // log("Testing token " + token.id);
+                // log("Token coords: (" + token.get('left') + ", " + token.get('top'));
                 //log("Reticle coords: (" + reticleToken.get('left') + ", " + reticleToken.get('top'));
                 if(token.get('left') + (token.get('width')/2) >= reticleToken.get('left') && 
                     token.get('left') - (token.get('width')/2) <= reticleToken.get('left') && 
                     token.get('top') + (token.get('height')/2) >= reticleToken.get('top') &&
                     token.get('top') - (token.get('height')/2) <= reticleToken.get('top'))
                     {
+                        // log('this target seems fine')
                         listSelectableGraphics.push(getObj('graphic', token.id))
                     }
             });
-            //log('List of selectable graphics: ' + listSelectableGraphics);
+            // log('List of selectable graphics: ' + listSelectableGraphics);
             reticleToken.remove();
             if(listSelectableGraphics.length > 1){
                 var listTokenNames = [], listCommandNames = [];
@@ -381,6 +387,10 @@ var BattleMaster = BattleMaster || (function() {
             return;
         }
         args = msg.content.split(/\s+/);//splits the message contents into discrete arguments
+        var s = msg.who; 
+        if(msg.who.indexOf(" (GM)") != -1){
+            s = s.substring(0,s.indexOf(" (GM)"));
+        }
 		switch(args[0]) {
 		    case '!combat':
 		        switch(args[1]){
@@ -425,34 +435,14 @@ var BattleMaster = BattleMaster || (function() {
                         log("ZIMA TARGET OD NEKAKVA LISTA: "+_.allKeys(target) + _.values(target))
                     break;
                     case "config":
-                        var s = msg.who; 
-                        if(msg.who.indexOf(" (GM)") != -1){
-                            s = s.substring(0,s.indexOf(" (GM)"));
-                        }
                         promptButtonArray("5E BattleMaster Config", ["DeathMarkersPlus","Character Sheet"], ["DMPConfig", "SheetConfig"], s);
-                    break;
-                    case "DMPConfig":
-                        var s = msg.who; 
-                        if(msg.who.indexOf(" (GM)") != -1){
-                            s = s.substring(0,s.indexOf(" (GM)"));
-                        }
-                        if(args[2]){
-                            state.bDeathMarkersPlusInstalled = args[2];
-                            sendChat('BattleMaster', '/w "' + s + '" Deathmarkersplus compatibility set to ' + state.bDeathMarkersPlusInstalled);
-                        }
-                        else{
-                            promptButtonArray("DeathMarkersPlus Compatibility",["On", "Off"],["DMPConfig true", "DMPConfig false"], s);
-                        }
                     break;
                     case "SheetConfig":
                         if(args[2]){
                             state.sCharacterSheetType = args[2];
+                            sendChat('BattleMaster', '/w "' + s + '" SheetConfig set to ' + state.sCharacterSheetType);
                         }
                         else{
-                            var s = msg.who; 
-                            if(msg.who.indexOf(" (GM)") != -1){
-                                s = s.substring(0,s.indexOf(" (GM)"));
-                            }
                             promptButtonArray("Character Sheet Type",["OGL", "Shaped"],["SheetConfig OGL", "SheetConfig Shaped"], s);
                         }
                     break;
@@ -574,7 +564,8 @@ var BattleMaster = BattleMaster || (function() {
             if(rollData.dmgRolls.length > 1 && rollData.dmgRolls[1].results.total != 0){
                 applyDamage(rollData.dmgRolls[1].results.total, rollData.dmgTypes[1], target.token, target.associatedCharacter);
             }
-            spawnFx(target.token.get('left'), target.token.get('top'), 'glow-blood',getObj('page', Campaign().get('playerpageid')));
+            log('SPECIAL FX WEAPON')
+            spawnFx(target.token.get('left'), target.token.get('top'), 'glow-blood');
         }
         else{
             //log("Miss! Enemy AC is " + target.ac + " and roll result was " + rollData.d20Rolls[0].results.total);
@@ -636,6 +627,13 @@ var BattleMaster = BattleMaster || (function() {
                 if(rollData.dmgRolls.length > 1 && rollData.dmgRolls[1].results.total != 0){
                     applyDamage(rollData.dmgRolls[1].results.total, rollData.dmgTypes[1], target.token, getObj('character', target.get('represents')));
                 }
+                log('SPECIAL FX DIRECT SPELL')
+                spawnFxBetweenPoints(
+                    {x:currentTurnToken.get("left"), y:currentTurnToken.get("top")},
+                    {x:target.token.get('left'), y:target.token.get('top')}, 
+                    'beam-fire');
+            } else {
+                sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" Miss! You didnt hit the target ' + target.get('name'));
             }
         }
     },
@@ -676,7 +674,7 @@ var BattleMaster = BattleMaster || (function() {
                 case "sphere": 
                     var effectType = "burst-"+dmgTypeToFXName(rollData.dmgTypes[0]);
                     //log("Spawning fx: " + effectType);
-                    spawnFx(x,y,effectType,getObj('page', Campaign().get('playerpageid')));
+                    spawnFx(x,y,effectType);
                     _.each(findAllTokensInSphere(createLocFromToken(currentTurnToken.token),args[2]), spellEffects)
                 break;
                 case "cube": break;
@@ -711,7 +709,7 @@ var BattleMaster = BattleMaster || (function() {
         //spawnFxBetweenPoints({x:(x+xMod),y:(y+yMod)},{})        
         var effectType = "breath-"+dmgTypeToFXName(currentlyCastingSpellRoll.dmgTypes[0]);
         //log("Spawning fx: " + effectType);
-        spawnFxBetweenPoints({x:(x+xMod), y:(y+yMod)},{x:(x+xMod+xMod), y:(y+yMod+yMod)},effectType,getObj('page', Campaign().get('playerpageid')));
+        spawnFxBetweenPoints({x:(x+xMod), y:(y+yMod)},{x:(x+xMod+xMod), y:(y+yMod+yMod)},effectType);
         _.each(findAllTokensInCone(new location(x + xMod, y + yMod,0), direction, range), spellEffects);
     },
 
@@ -733,7 +731,7 @@ var BattleMaster = BattleMaster || (function() {
         var effectType = "beam-"+dmgTypeToFXName(currentlyCastingSpellRoll.dmgTypes[0]);
         //log("Spawning fx: " + effectType);
         var startLoc = new location(x+xMod,y+yMod,0), endLoc = new location(x+xMod+xMod, y+yMod+yMod);
-        spawnFxBetweenPoints(startLoc,endLoc,effectType,getObj('page', Campaign().get('playerpageid')));
+        spawnFxBetweenPoints(startLoc,endLoc,effectType);
         _.each(findAllTokensInLine(x+xMod,y+yMod,direction,range), spellEffects);
     },
 
@@ -1061,9 +1059,6 @@ var BattleMaster = BattleMaster || (function() {
         //log('TARGET HP = ' + tempHP);
         if (immunitiesRaw != undefined && dmgType != "" && universalizeString(immunitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
             sendChat('BattleMaster', "Target is immune to " + dmgType);
-            if(state.bDeathMarkersPlusInstalled){
-                Deathmarkers.UpdateDeathMarkers(targetToken);
-            }
             return;
         } 
         else if(tempHP >= 0){
@@ -1077,18 +1072,16 @@ var BattleMaster = BattleMaster || (function() {
             }
 
             targetToken.set('bar3_value', tempHP>0?tempHP:0);
-
-            if(state.bDeathMarkersPlusInstalled){
-                Deathmarkers.UpdateDeathMarkers(targetToken);
-            }
-            return;
         }
 
-        //  NO  HP LEFT
-        if(state.bDeathMarkersPlusInstalled){
-            Deathmarkers.UpdateDeathMarkers(targetToken);
+        if (tempHP <= 0){
+            //  NO  HP LEFT DEATH :O whwuahahahahaa
+            targetToken.set('status_dead', true);
+            // also give XP to the brave one :D
+            awardXP =( parseInt(currentTurnToken.get('bar2_value'),10)+ parseInt(getAttrByName(targetToken.get('represents'),'npc_xp'),10));
+            currentTurnToken.set('bar2_value', awardXP)
         }
-        return;
+
     },
 
     dmgTypeToFXName = function(dmgType){
