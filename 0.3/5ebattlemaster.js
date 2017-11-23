@@ -333,7 +333,9 @@ var BattleMaster = BattleMaster || (function() {
                     token.get('top') - (token.get('height')/2) <= reticleToken.get('top'))
                     {
                         // log('this target seems fine')
-                        listSelectableGraphics.push(getObj('graphic', token.id))
+                        if (!token.get('status_dead')) {
+                            listSelectableGraphics.push(getObj('graphic', token.id))
+                        }
                     }
             });
             // log('List of selectable graphics: ' + listSelectableGraphics);

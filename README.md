@@ -40,6 +40,7 @@ In order to use AOE spells, you must slightly change the "range" variable of the
 * Remove that deathmarkerplus thing
 * Fixed FX on damage
 * Award XP
+* Prevent user from targeting dead target
 
 ## V0.2
 * Added a bunch of objects to clarify code
