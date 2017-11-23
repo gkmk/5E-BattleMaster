@@ -1043,27 +1043,24 @@ var BattleMaster = BattleMaster || (function() {
     },
     
     applyDamage = function(dmgAmt, dmgType, targetToken, targetCharacter){
-        log("TARGET TOKEN = "+_.allKeys(targetToken))
-        //log("Applying " + dmgAmt +" " +  dmgType + " damage to " + targetToken.get('name'));
-        switch(state.sCharacterSheetType){
-            case "OGL":
-                var immunitiesRaw = getAttrByName(targetCharacter.id,"npc_immunities"),
-                resistancesRaw = getAttrByName(targetCharacter.id,"npc_resistances"),
-                vulnerabilitiesRaw = getAttrByName(targetCharacter.id,"npc_vulnerabilities"); 
-            break;
-            case "Shaped":
-                var immunitiesRaw = getAttrByName(targetCharacter.id,"damage_immunities"),
-                resistancesRaw = getAttrByName(targetCharacter.id,"damage_resistances"),
-                vulnerabilitiesRaw = getAttrByName(targetCharacter.id,"damage_vulnerabilities");
-                if(!immunitiesRaw){immunitiesRaw="";}
-                if(!resistancesRaw){resistancesRaw="";}
-                if(!vulnerabilitiesRaw){vulnerabilitiesRaw="";}
-            break;
-        }
+        // log("TARGET TOKEN = "+_.allKeys(targetToken))
+        log("Applying " + dmgAmt +" " +  dmgType + " damage to " + targetToken.get('name'));
+        var immunitiesRaw = getAttrByName(targetCharacter.id,"npc_immunities"),
+        resistancesRaw = getAttrByName(targetCharacter.id,"npc_resistances"),
+        vulnerabilitiesRaw = getAttrByName(targetCharacter.id,"npc_vulnerabilities"); 
+
+        if(!immunitiesRaw){immunitiesRaw = getAttrByName(targetCharacter.id,"damage_immunities")}
+        if(!resistancesRaw){getAttrByName(targetCharacter.id,"damage_resistances")}
+        if(!vulnerabilitiesRaw){getAttrByName(targetCharacter.id,"damage_vulnerabilities")}
+
+        if(!immunitiesRaw){immunitiesRaw="";}
+        if(!resistancesRaw){resistancesRaw="";}
+        if(!vulnerabilitiesRaw){vulnerabilitiesRaw="";}
+
         var tempHP = targetToken.get('bar3_value');
         //log('TARGET HP = ' + tempHP);
         if (immunitiesRaw != undefined && dmgType != "" && universalizeString(immunitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
-             //log('appply immunities');
+            sendChat('BattleMaster', "Target is immune to " + dmgType);
             if(state.bDeathMarkersPlusInstalled){
                 Deathmarkers.UpdateDeathMarkers(targetToken);
             }
@@ -1072,74 +1069,26 @@ var BattleMaster = BattleMaster || (function() {
         else if(tempHP >= 0){
             //log('has HP');
             if (vulnerabilitiesRaw != undefined && dmgType != "" && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
-                if(tempHP >= Math.round(2*dmgAmt)){
-                    targetToken.set('bar3_value', tempHP - Math.round(2*dmgAmt));
-                }
-                else{
-                    targetToken.set('bar3_value', 0);
-                    var dmgLeft = Math.round(2*dmgAmt) - tempHP;
-                    targetToken.set('bar3_value', targetToken.get('bar3_value') - dmgLeft);
-                }
-                if(state.bDeathMarkersPlusInstalled){
-                    Deathmarkers.UpdateDeathMarkers(targetToken);
-                }
-                return;
+                tempHP -= Math.round(2*dmgAmt);
+            }else if (resistancesRaw != undefined && dmgType != "" && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1) {
+                tempHP -= Math.round(dmgAmt/2);
+            }else {
+                tempHP -= dmgAmt;
             }
-            else if (resistancesRaw != undefined && dmgType != "" && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1) {
-                if(tempHP >= Math.round(dmgAmt/2)){
-                    targetToken.set('bar3_value', tempHP - Math.round(dmgAmt/2));
-                }
-                else{
-                    targetToken.set('bar3_value', 0);
-                    var dmgLeft = Math.round(dmgAmt/2) - tempHP;
-                    targetToken.set('bar3_value', targetToken.get('bar3_value') - dmgLeft);
-                }
-                
-                if(state.bDeathMarkersPlusInstalled){
-                    Deathmarkers.UpdateDeathMarkers(targetToken);
-                }
-                return;
+
+            targetToken.set('bar3_value', tempHP>0?tempHP:0);
+
+            if(state.bDeathMarkersPlusInstalled){
+                Deathmarkers.UpdateDeathMarkers(targetToken);
             }
-            else{
-                if(tempHP >= dmgAmt){
-                    targetToken.set('bar3_value', tempHP - dmgAmt);
-                }
-                else{
-                    targetToken.set('bar3_value', 0);
-                    var dmgLeft = dmgAmt - tempHP;
-                    targetToken.set('bar3_value', targetToken.get('bar3_value') - dmgLeft);
-                }
-                if(state.bDeathMarkersPlusInstalled){
-                    Deathmarkers.UpdateDeathMarkers(targetToken);
-                }
-                return;
-            }
+            return;
         }
-        else{
-            //log('HP 0');
-            if (vulnerabilitiesRaw != undefined && dmgType != "" && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
-                targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(2*dmgAmt));
-                if(state.bDeathMarkersPlusInstalled){
-                    Deathmarkers.UpdateDeathMarkers(targetToken);
-                }
-                return;
-            }
-            else if (resistancesRaw != undefined && dmgType != "" && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1) {
-                //log(targetCharacter.get('name') + " has resistance to " + dmgType +" damage!")
-                targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(dmgAmt/2));
-                if(state.bDeathMarkersPlusInstalled){
-                    Deathmarkers.UpdateDeathMarkers(targetToken);
-                }
-                return;
-            }
-            else{
-                targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(dmgAmt));
-                if(state.bDeathMarkersPlusInstalled){
-                    Deathmarkers.UpdateDeathMarkers(targetToken);
-                }
-                return;
-            }
+
+        //  NO  HP LEFT
+        if(state.bDeathMarkersPlusInstalled){
+            Deathmarkers.UpdateDeathMarkers(targetToken);
         }
+        return;
     },
 
     dmgTypeToFXName = function(dmgType){
