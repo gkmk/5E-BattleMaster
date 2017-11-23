@@ -37,11 +37,11 @@ var BattleMaster = BattleMaster || (function() {
     }
     /* OBJECTS */
     function rollData(rollMsg){
-        log("Creating RollData object!");
+        //log("Creating RollData object!");
         var inlineData = rollMsg.inlinerolls;
         var r1Index = -1, r2Index = -1, dmg1Index = -1, dmg2Index = -1, crit1Index = -1, crit2Index = -1, saveDCIndex = -1;
-        log("Inline data: " + JSON.stringify(inlineData));
-        log("rollMsg.content = " +rollMsg.content);
+        //log("Inline data: " + JSON.stringify(inlineData));
+        //log("rollMsg.content = " +rollMsg.content);
         this.playerid = rollMsg.playerid;
         this.d20Rolls = [];
         this.dmgRolls = [];
@@ -53,7 +53,7 @@ var BattleMaster = BattleMaster || (function() {
         this.saveEffects = "";
         switch(state.sCharacterSheetType){
             case "OGL":
-                log("using OGL sheet");
+                //log("using OGL sheet");
                 this.bRequiresSavingThrow = (universalizeString(rollMsg.content).indexOf("saveattr") != -1);
                 r1Index = parseInt(stringBetween(rollMsg.content,"{{r1=$[[","]]"),10);
                 if (stringBetween(rollMsg.content,"{{r2=$[[","]]") != "") {                    
@@ -87,10 +87,10 @@ var BattleMaster = BattleMaster || (function() {
                 this.saveEffects = rollMsg.content.substring(rollMsg.content.indexOf("savedesc=") + 9, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("savedesc=") + 9,"}}"));
             break;
             case "Shaped":
-                log("using Shaped sheet");
+                //log("using Shaped sheet");
                 this.bRequiresSavingThrow = (universalizeString(rollMsg.content).indexOf("saving_throw_vs_ability") != -1);
                 if(this.bRequiresSavingThrow){
-                    log("require save throw");
+                    //log("require save throw");
                     dmg1Index=parseInt(stringBetween(rollMsg.content,"{{saving_throw_damage=$[[","]]"),10);
                     dmgType1=stringBetween(rollMsg.content,"{{saving_throw_damage_type=","}}");    
                     this.saveType = stringBetween(rollMsg.content,"{{saving_throw_vs_ability=","}}");
@@ -98,7 +98,7 @@ var BattleMaster = BattleMaster || (function() {
                     //this.saveEffects = rollMsg.content.substring(rollMsg.content.indexOf("savedesc=") + 9, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("savedesc=") + 9,"}}"));
                 }
                 else if(universalizeString(rollMsg.content).indexOf("attack1") != -1){
-                    log("attack1");
+                    //log("attack1");
                     var r1Index = parseInt(stringBetween(rollMsg.content,"{{attack1=$[[","]]"),10);
                     //r2Index = parseInt(rollMsg.content.substring(rollMsg.content.indexOf("{{r2=$[[") + 8, firstIndexAfter(rollMsg.content,rollMsg.content.indexOf("{{r2=$[[") + 8,"]]")),10),
                     var dmg1Index = parseInt(stringBetween(rollMsg.content,"{{attack_damage=$[[","]]"),10),
@@ -109,7 +109,7 @@ var BattleMaster = BattleMaster || (function() {
                     dmgType2 = stringBetween(rollMsg.content,"{{attack_second_damage_type=","}}");
                 }
                 else if(universalizeString(rollMsg.content).indexOf("r1") != -1){
-                    log("gk serializer");
+                    //log("gk serializer");
                     var r1Index = parseInt(stringBetween(rollMsg.content,"{{r1=$[[","]]"),10);
                     var r2Index = parseInt(stringBetween(rollMsg.content,"{{r2=$[[","]]"),10);
                     var dmg1Index = parseInt(stringBetween(rollMsg.content,"{{dmg1=$[[","]]"),10),
@@ -120,20 +120,20 @@ var BattleMaster = BattleMaster || (function() {
                     dmgType2 = stringBetween(rollMsg.content,"{{dmg2type=","}}");
                 }
                 else{
-                    log("roll1");
+                    //log("roll1");
                     var r1Index = parseInt(stringBetween(rollMsg.content,"{{roll1=$[[","]]"),10);
                 }
                 //this.rangeString = rollMsg.content.substring(rollMsg.content.indexOf("{{range=") + 8, firstIndexAfter(rollMsg.content, rollMsg.content.indexOf("{{range=") + 8, "}}"));
             break;
         }
-        log("r1index = "+ r1Index);
-        log("r2Index = "+ r2Index);
-        log("saveDCIndex = "+ saveDCIndex);
-        log("dmg1Index = "+ dmg1Index);
-        log("dmg2Index = "+ dmg2Index);
+        //log("r1index = "+ r1Index);
+        //log("r2Index = "+ r2Index);
+        //log("saveDCIndex = "+ saveDCIndex);
+        //log("dmg1Index = "+ dmg1Index);
+        //log("dmg2Index = "+ dmg2Index);
         if(r1Index != -1){this.d20Rolls.push(inlineData[r1Index]);}
         if(r2Index != -1){this.d20Rolls.push(inlineData[r2Index]);}
-        if(saveDCIndex != -1){this.dc = inlineData[saveDCIndex]; log("SaveDCIndex isn't negative one!");}
+        if(saveDCIndex != -1){this.dc = inlineData[saveDCIndex]; } //log("SaveDCIndex isn't negative one!");}
         if(dmg1Index != -1){this.dmgRolls.push(inlineData[dmg1Index]); this.dmgTypes.push(universalizeString(dmgType1));}
         if(dmg2Index != -1){this.dmgRolls.push(inlineData[dmg2Index]); this.dmgTypes.push(universalizeString(dmgType2));}
     }
@@ -156,9 +156,9 @@ var BattleMaster = BattleMaster || (function() {
         this.iMoveSpeedTotal = token.get('bar1_max');
         this.iMoveSpeedRemaining = token.get('bar1_value');
         this.name = token.get('name');
-        this.ac = getAttrByName(token.get('represents'),'npcd_ac');
+        this.ac = getAttrByName(token.get('represents'),'npc_ac');
         if(this.ac === "" || this.ac === undefined){
-            log('Couldn\'t find npcd_ac, looking for just ac')
+            //log('Couldn\'t find npc_ac, looking for just ac')
             this.ac = getAttrByName(token.get('represents'),'ac');
         }
         this.get = function(attribute){
@@ -193,8 +193,8 @@ var BattleMaster = BattleMaster || (function() {
         );
     },
 
-    firstIndexAfter = function(string, preIndex, search){
-        return (preIndex + string.substring(preIndex).indexOf(search));
+    firstIndexAfter = function(s, preIndex, search){
+        return (preIndex + s.substring(preIndex).indexOf(search));
     },
 
     stringBetween = function(totalString, startString, endString){
@@ -230,7 +230,7 @@ var BattleMaster = BattleMaster || (function() {
             }
             tempString = tempString.toLowerCase();
             listCommandNames[i] = tempString;
-            log(tempString);
+            //log(tempString);
         }
         */
         
@@ -261,12 +261,12 @@ var BattleMaster = BattleMaster || (function() {
             height: distanceToPixels(5),
         }).id;
         sendPing(currentTurnToken.token.get('left'), currentTurnToken.token.get('top')- distanceToPixels(5), null, true);
-        log("Reticle token ID: " + reticleTokenId);
+        //log("Reticle token ID: " + reticleTokenId);
         promptButtonArray("Move the target to where you would like to attack", ["Target selected"], ["selectedTarget"], currentPlayerDisplayName);
     },
     
     findCurrentTurnToken = function(turnorder) {
-        log("Finding current turn token!");
+        //log("Finding current turn token!");
 		if (!turnorder) 
 			{turnorder = Campaign().get('turnorder');}
 		if (!turnorder) 
@@ -275,12 +275,12 @@ var BattleMaster = BattleMaster || (function() {
 			{turnorder = JSON.parse(turnorder);}
 		if (turnorder && turnorder.length > 0 && turnorder[0].id !== -1)
             {return getObj('graphic',turnorder[0].id);}
-        log("Found current turn token!");
+        //log("Found current turn token!");
 		return;
 	},
 	
 	findWhoIsControlling = function(character){
-        log("Running findWhoIsControlling!");
+        //log("Running findWhoIsControlling!");
 	    var whoIsControlling;
 	    _.each(character.get('controlledby').split(','), function(player){
 	        if(!playerIsGM(player)){
@@ -291,24 +291,24 @@ var BattleMaster = BattleMaster || (function() {
 	        }
         });
         if(whoIsControlling){
-            log("Found a controlling player!")
+            //log("Found a controlling player!")
             return whoIsControlling;
         }
         else{
-            log("No players in the controlling list!")
+            //log("No players in the controlling list!")
             var listPlayers = findObjs({
                 _type: "player",
                 _online: true
             });
             _.each(listPlayers, function(player){
-                log("Checking player: " + player.get('displayname'));
+                //log("Checking player: " + player.get('displayname'));
                 if(playerIsGM(player.get('id'))){
-                    log(player.get('displayname') + " is a GM, setting them to controlling!");
+                    //log(player.get('displayname') + " is a GM, setting them to controlling!");
                     whoIsControlling = player;
                     return player;
                 }
             }, [whoIsControlling]);
-            log('returning GM '+whoIsControlling.get('displayname'))
+            //log('returning GM '+whoIsControlling.get('displayname'))
             return whoIsControlling.get('id');
         }
 	},
@@ -316,12 +316,12 @@ var BattleMaster = BattleMaster || (function() {
     findTokenAtTarget = function(){
         var reticleToken = getObj("graphic",reticleTokenId);
         if(reticleToken){
-            log("Reticle token isn't null!");
+            //log("Reticle token isn't null!");
             _.each(JSON.parse(Campaign().get('turnorder')), function(token){
                 token = getObj('graphic', token.id);
-                log("Testing token " + token.id);
-                log("Token coords: (" + token.get('left') + ", " + token.get('top'));
-                log("Reticle coords: (" + reticleToken.get('left') + ", " + reticleToken.get('top'));
+                //log("Testing token " + token.id);
+                //log("Token coords: (" + token.get('left') + ", " + token.get('top'));
+                //log("Reticle coords: (" + reticleToken.get('left') + ", " + reticleToken.get('top'));
                 if(token.get('left') + (token.get('width')/2) >= reticleToken.get('left') && 
                     token.get('left') - (token.get('width')/2) <= reticleToken.get('left') && 
                     token.get('top') + (token.get('height')/2) >= reticleToken.get('top') &&
@@ -330,7 +330,7 @@ var BattleMaster = BattleMaster || (function() {
                         listSelectableGraphics.push(getObj('graphic', token.id))
                     }
             });
-            log('List of selectable graphics: ' + listSelectableGraphics);
+            //log('List of selectable graphics: ' + listSelectableGraphics);
             reticleToken.remove();
             if(listSelectableGraphics.length > 1){
                 var listTokenNames = [], listCommandNames = [];
@@ -338,15 +338,15 @@ var BattleMaster = BattleMaster || (function() {
                     listTokenNames.push(listSelectableGraphics[i].get("name"));
                     listCommandNames.push("tokenfromlist " + i);
                 }
-                log("List of potential targets is more than one long!");
+                //log("List of potential targets is more than one long!");
                 promptButtonArray("Which token are you targeting?",listTokenNames,listCommandNames,currentPlayerDisplayName);
             }
             else if(listSelectableGraphics.length === 1){
                 target = new tokenWrapper(listSelectableGraphics[0]);
-                log("Target:" + target);
+                log("Target OD TOKEN WRAPER:" + _.allKeys(target)  + _.values(target) );
             }
             else{
-                log("List of potential targets is null!");
+                //log("List of potential targets is null!");
             }
         }
         else{
@@ -368,8 +368,10 @@ var BattleMaster = BattleMaster || (function() {
         }
         if(bIsWaitingOnRoll && msg.inlinerolls != undefined){
             //Call roll result here
-            log("We have recieved a roll result!")
+            log("We have recieved a roll result!" + _.allKeys(msg)+ _.allKeys(listPlayerIDsWaitingOnRollFrom))
+            //log("so e voa listPlayerIDsWaitingOnRollFrom: "+listPlayerIDsWaitingOnRollFrom)
             var playerIDLocation = listPlayerIDsWaitingOnRollFrom.indexOf(msg.playerid);
+            //log("roll player id: "+msg.playerid);
             var recievedRoll = new rollData(msg);
             if(playerIDLocation != -1){
                 listRollCallbackFunctions[playerIDLocation](recievedRoll);
@@ -420,6 +422,7 @@ var BattleMaster = BattleMaster || (function() {
                     break;
                     case 'tokenfromlist':
                         target = listSelectableGraphics[args[2]];
+                        log("ZIMA TARGET OD NEKAKVA LISTA: "+_.allKeys(target) + _.values(target))
                     break;
                     case "config":
                         var s = msg.who; 
@@ -461,7 +464,7 @@ var BattleMaster = BattleMaster || (function() {
     StartCombat = function(){
         bInCombat = true;
         bIsWaitingOnResponse = false;
-        log('Combat Started!');
+        //log('Combat Started!');
         sendChat("BattleMaster", "/w GM Combat Started!")
         /*
         Things this needs to do: 
@@ -473,21 +476,21 @@ var BattleMaster = BattleMaster || (function() {
     StopCombat = function(){
         bInCombat = false;
         bIsWaitingOnResponse = false;
-        log('Combat stopped!');
+        //log('Combat stopped!');
         sendChat("BattleMaster", "/w GM Combat Stopped!")
     },
     
     TurnChange = function(){
-        log('The turn has changed!');
+        //log('The turn has changed!');
         var turnorder;
         //Find all the information on whose turn it is
-        log("Turnorder: " + Campaign().get('turnorder'));
+        //log("Turnorder: " + Campaign().get('turnorder'));
         currentTurnToken = new tokenWrapper(findCurrentTurnToken(Campaign().get('turnorder')));
         log("CurrentTurnToken: " + JSON.stringify(currentTurnToken));
         currentTurnCharacter = getObj('character',currentTurnToken.token.get('represents'));
-        log("CurrentTurnCharacter: " + JSON.stringify(currentTurnCharacter));
+        //log("CurrentTurnCharacter: " + JSON.stringify(currentTurnCharacter));
         currentTurnPlayer = getObj('player',findWhoIsControlling(currentTurnCharacter));
-        log("CurrentTurnPlayer: " + JSON.stringify(currentTurnPlayer));
+        //log("CurrentTurnPlayer: " + JSON.stringify(currentTurnPlayer));
         currentPlayerDisplayName = currentTurnPlayer.get('displayname');
         if (!turnorder) 
 			{turnorder = Campaign().get('turnorder');}
@@ -502,8 +505,8 @@ var BattleMaster = BattleMaster || (function() {
         _.each(turnorder, function(current){
             listTokensInEncounter.push(new tokenWrapper(getObj("graphic",current.id)));
         });
-        log('It\'s now ' + currentTurnCharacter.get('name') + '\'s turn!' );
-        log('This character is controlled by player ' + currentTurnPlayer.get('displayname'))
+        //log('It\'s now ' + currentTurnCharacter.get('name') + '\'s turn!' );
+        //log('This character is controlled by player ' + currentTurnPlayer.get('displayname'))
         sendChat('BattleMaster','/w "'+ currentTurnPlayer.get('displayname') + '" It\'s your turn as ' + currentTurnToken.name);
         promptButtonArray("Select an action", generateTurnOptions(),generateTurnOptionCommands(), currentPlayerDisplayName);
     },
@@ -547,14 +550,15 @@ var BattleMaster = BattleMaster || (function() {
     
     WeaponAttack = function(){
         if(target != undefined){
-            log('Weapon attacking at ' + target.name);
+            //log('Weapon attacking at ' + target.name);
             sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" ' + "Now attempting to attack " + target.name + ". Please roll your weapon attack from your character sheet.");
             listRollCallbackFunctions.push(WeaponAttackRollCallback);
+            //log("CURRENt player: "+_.allKeys(currentTurnPlayer))
             listPlayerIDsWaitingOnRollFrom.push(currentTurnPlayer.id);
             bIsWaitingOnRoll = true;
         }
         else{
-            log('Tried to attack with weapon, but no target was selected!');
+            //log('Tried to attack with weapon, but no target was selected!');
             sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" No target is selected! Please select a target!');
             promptTarget();
             selectedTokenCallbackFunction = WeaponAttack;
@@ -564,7 +568,7 @@ var BattleMaster = BattleMaster || (function() {
     WeaponAttackRollCallback = function(rollData){
         bIsWaitingOnRoll = (listPlayerIDsWaitingOnRollFrom.length != 0); //Check if we're still waiting on another roll
         if(target.ac <= rollData.d20Rolls[0].results.total){
-            log("Hit! Enemy AC is " + target.ac + " and roll result was " + rollData.d20Rolls[0].results.total);
+            //log("Hit! Enemy AC is " + target.ac + " and roll result was " + rollData.d20Rolls[0].results.total);
             sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" Hit! Applying damage to ' + target.name);
             applyDamage(rollData.dmgRolls[0].results.total, rollData.dmgTypes[0], target.token, target.associatedCharacter);
             if(rollData.dmgRolls.length > 1 && rollData.dmgRolls[1].results.total != 0){
@@ -573,22 +577,22 @@ var BattleMaster = BattleMaster || (function() {
             spawnFx(target.token.get('left'), target.token.get('top'), 'glow-blood',getObj('page', Campaign().get('playerpageid')));
         }
         else{
-            log("Miss! Enemy AC is " + target.ac + " and roll result was " + rollData.d20Rolls[0].results.total);
+            //log("Miss! Enemy AC is " + target.ac + " and roll result was " + rollData.d20Rolls[0].results.total);
             sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" Miss!');
         }
     },
     
     DirectSpellAttack = function(){
         if(target != undefined){
-            log('Direct spell attacking at ' + target.name);
+            //log('Direct spell attacking at ' + target.name);
             sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" ' + "Now attempting to attack " + target.name + ". Please roll your spell attack from your character sheet.");
             listRollCallbackFunctions.push(DirectSpellRollCallback);
-            log("Current turn player: " + currentTurnPlayer);
+            //log("Current turn player: " + _.allKeys(currentTurnPlayer));
             listPlayerIDsWaitingOnRollFrom.push(currentTurnPlayer.id);
             bIsWaitingOnRoll = true;
         }
         else{
-            log('Tried to attack with direct spell, but no target was selected!');
+            //log('Tried to attack with direct spell, but no target was selected!');
             sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" No target is selected! Please select a target!');
             promptTarget();
             selectedTokenCallbackFunction = DirectSpellAttack;
@@ -605,29 +609,32 @@ var BattleMaster = BattleMaster || (function() {
     },
     
     DirectSpellRollCallback = function(rollData){
+        log("Direct Spell attack start!");
         bIsWaitingOnRoll = (listPlayerIDsWaitingOnRollFrom.length != 0); //Check if we're still waiting on another roll
         if(rollData.bRequiresSavingThrow){
+            log("Require save throw!");
             currentlyCastingSpellRoll = rollData;
-            log("Saving throw spell!");
+            //log("Saving throw spell!");
             var playerID = findWhoIsControlling(target.associatedCharacter);
             sendChat("BattleMaster", '/w "' + getObj('player',playerID).get("displayname") + '" Please roll a ' + rollData.saveType + ' saving throw for ' + target.get("name"));
+            //log("player id kurac: "+playerID)
             listPlayerIDsWaitingOnRollFrom.push(playerID);
             listRollCallbackFunctions.push(SavingThrowAgainstDamageRollCallback);
             listTokensWaitingOnSavingThrowsFrom.push(target);
         }
         else{
             log("Spell attack!");
-            var ac = getAttrByName(target.get('represents'),'npcd_ac');
+            var ac = getAttrByName(target.get('represents'),'npc_ac');
             if(ac === "" || ac === undefined){
-                log('Couldn\'t find npcd_ac, looking for just ac')
+                //log('Couldn\'t find npc_ac, looking for just ac')
                 ac = getAttrByName(target.get('represents'),'ac');
             }
             if(ac <= rollData.d20Rolls[0].results.total){
                 log("Hit! Enemy AC is " + ac + " and roll result was " + rollData.d20Rolls[0].results.total);
                 sendChat("BattleMaster", '/w "' + currentPlayerDisplayName + '" Hit! Applying damage to ' + target.get('name'));
-                applyDamage(rollData.dmgRolls[0].results.total, rollData.dmgTypes[0], target, getObj('character', target.get('represents')));
+                applyDamage(rollData.dmgRolls[0].results.total, rollData.dmgTypes[0], target.token, getObj('character', target.get('represents')));
                 if(rollData.dmgRolls.length > 1 && rollData.dmgRolls[1].results.total != 0){
-                    applyDamage(rollData.dmgRolls[1].results.total, rollData.dmgTypes[1], target, getObj('character', target.get('represents')));
+                    applyDamage(rollData.dmgRolls[1].results.total, rollData.dmgTypes[1], target.token, getObj('character', target.get('represents')));
                 }
             }
         }
@@ -635,6 +642,7 @@ var BattleMaster = BattleMaster || (function() {
     
     AOESpellAttack = function(){
         sendChat('BattleMaster', '/w "' + currentPlayerDisplayName + '" Roll your AOE spell from your character sheet!');
+        //log('adding on aoe player'+_.allKeys(currentTurnPlayer))
         listPlayerIDsWaitingOnRollFrom.push(currentTurnPlayer.id);
         listRollCallbackFunctions.push(AOESpellRollCallback);
         bIsWaitingOnRoll = true;
@@ -646,7 +654,7 @@ var BattleMaster = BattleMaster || (function() {
         x = currentTurnToken.token.get('left'), y = currentTurnToken.token.get('top'),
         args = rangeString.toLowerCase().split(/\s+/);
         if(args[0]!= "self"){
-            log("Not self targeted!");
+            //log("Not self targeted!");
         }
         else{
             switch(args[1]){
@@ -656,7 +664,7 @@ var BattleMaster = BattleMaster || (function() {
                     bIsWaitingOnResponse = true;
                     responseCallbackFunction = coneDirectionPromptCallback;
                     range = args[2];
-                    log("Spell is a cone!");
+                    //log("Spell is a cone!");
                 break;
                 case "line": 
                     promptButtonArray("Select a direction", ["North","South","East","West","Northeast","Northwest","Southeast","Southwest"], 
@@ -667,7 +675,7 @@ var BattleMaster = BattleMaster || (function() {
                  break;
                 case "sphere": 
                     var effectType = "burst-"+dmgTypeToFXName(rollData.dmgTypes[0]);
-                    log("Spawning fx: " + effectType);
+                    //log("Spawning fx: " + effectType);
                     spawnFx(x,y,effectType,getObj('page', Campaign().get('playerpageid')));
                     _.each(findAllTokensInSphere(createLocFromToken(currentTurnToken.token),args[2]), spellEffects)
                 break;
@@ -685,7 +693,7 @@ var BattleMaster = BattleMaster || (function() {
     },
 
     coneDirectionPromptCallback = function(){
-        log("Casting " + direction);
+        //log("Casting " + direction);
         var xMod = 0, yMod = 0,
         x = currentTurnToken.token.get("left"), y = currentTurnToken.token.get("top");
         if(direction.toLowerCase().indexOf('up') != -1){
@@ -702,7 +710,7 @@ var BattleMaster = BattleMaster || (function() {
         }
         //spawnFxBetweenPoints({x:(x+xMod),y:(y+yMod)},{})        
         var effectType = "breath-"+dmgTypeToFXName(currentlyCastingSpellRoll.dmgTypes[0]);
-        log("Spawning fx: " + effectType);
+        //log("Spawning fx: " + effectType);
         spawnFxBetweenPoints({x:(x+xMod), y:(y+yMod)},{x:(x+xMod+xMod), y:(y+yMod+yMod)},effectType,getObj('page', Campaign().get('playerpageid')));
         _.each(findAllTokensInCone(new location(x + xMod, y + yMod,0), direction, range), spellEffects);
     },
@@ -723,7 +731,7 @@ var BattleMaster = BattleMaster || (function() {
             xMod = 35;
         }       
         var effectType = "beam-"+dmgTypeToFXName(currentlyCastingSpellRoll.dmgTypes[0]);
-        log("Spawning fx: " + effectType);
+        //log("Spawning fx: " + effectType);
         var startLoc = new location(x+xMod,y+yMod,0), endLoc = new location(x+xMod+xMod, y+yMod+yMod);
         spawnFxBetweenPoints(startLoc,endLoc,effectType,getObj('page', Campaign().get('playerpageid')));
         _.each(findAllTokensInLine(x+xMod,y+yMod,direction,range), spellEffects);
@@ -732,6 +740,7 @@ var BattleMaster = BattleMaster || (function() {
     spellEffects = function(token){
         var playerID = findWhoIsControlling(token.associatedCharacter);
         sendChat("BattleMaster", '/w "' + getObj('player',playerID).get("displayname") + '" Please roll a ' + currentlyCastingSpellRoll.saveType + ' saving throw for ' + token.name);
+        //log('spell effect adding player id:' + playerID)
         listPlayerIDsWaitingOnRollFrom.push(playerID);
         listRollCallbackFunctions.push(SavingThrowAgainstDamageRollCallback);
         listTokensWaitingOnSavingThrowsFrom.push(token);
@@ -897,13 +906,13 @@ var BattleMaster = BattleMaster || (function() {
         }
 
         _.each(listTokensInEncounter, function(token){
-            log("Looking for token" + token.token.get("name"));
+            //log("Looking for token" + token.token.get("name"));
             if(tokenIsConstrainedByLines(token, line1XofY, line1YofX, line2XofY, line2YofX, bLine1XNeg, bLine1YNeg, bLine2XNeg, bLine2YNeg, range)){
                 listTokensToReturn.push(token);
-                log(token.token.get("name") + " is within the cone!");
+                //log(token.token.get("name") + " is within the cone!");
             }
             else{
-                log(token.token.get('name') + " is outside the cone.");
+                //log(token.token.get('name') + " is outside the cone.");
             }
         });
         return listTokensToReturn;
@@ -912,13 +921,13 @@ var BattleMaster = BattleMaster || (function() {
     findAllTokensInSphere = function(origin,range){
         var listTokensToReturn = [];
         _.each(listTokensInEncounter, function(token){
-            log("Looking for token" + token.name);
+            //log("Looking for token" + token.name);
             if(distanceBetween(origin,createLocFromToken(token.token)) <= distanceToPixels(range)){
                 listTokensToReturn.push(token);
-                log(token.name + " is inside the sphere");
+                //log(token.name + " is inside the sphere");
             }
             else{
-                log(token.name + " is outside the sphere");
+                //log(token.name + " is outside the sphere");
             }
         });
         return listTokensToReturn;
@@ -982,13 +991,13 @@ var BattleMaster = BattleMaster || (function() {
     findAllTokensInCylinder = function(origin,range,height){
         var listTokensToReturn = [];
         _.each(listTokensInEncounter, function(token){
-            log("Looking for token" + token.token.get("name"));
+            //log("Looking for token" + token.token.get("name"));
             if(distanceBetween(origin,createLocFromToken(token)) <= distanceToPixels(range)){
                 listTokensToReturn.push(token);
-                log(token.token.get("name") + " is inside the sphere");
+                //log(token.token.get("name") + " is inside the sphere");
             }
             else{
-                log(token.token.get('name') + " is outside the sphere");
+                //log(token.token.get('name') + " is outside the sphere");
             }
         });
         return listTokensToReturn;
@@ -1034,7 +1043,8 @@ var BattleMaster = BattleMaster || (function() {
     },
     
     applyDamage = function(dmgAmt, dmgType, targetToken, targetCharacter){
-        log("Applying " + dmgAmt +" " +  dmgType + " damage to " + targetToken.get('name'));
+        log("TARGET TOKEN = "+_.allKeys(targetToken))
+        //log("Applying " + dmgAmt +" " +  dmgType + " damage to " + targetToken.get('name'));
         switch(state.sCharacterSheetType){
             case "OGL":
                 var immunitiesRaw = getAttrByName(targetCharacter.id,"npc_immunities"),
@@ -1051,16 +1061,16 @@ var BattleMaster = BattleMaster || (function() {
             break;
         }
         var tempHP = targetToken.get('bar3_value');
-        log('TARGET HP = ' + tempHP);
+        //log('TARGET HP = ' + tempHP);
         if (immunitiesRaw != undefined && dmgType != "" && universalizeString(immunitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
-             log('appply immunities');
+             //log('appply immunities');
             if(state.bDeathMarkersPlusInstalled){
                 Deathmarkers.UpdateDeathMarkers(targetToken);
             }
             return;
         } 
         else if(tempHP >= 0){
-            log('has HP');
+            //log('has HP');
             if (vulnerabilitiesRaw != undefined && dmgType != "" && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 if(tempHP >= Math.round(2*dmgAmt)){
                     targetToken.set('bar3_value', tempHP - Math.round(2*dmgAmt));
@@ -1106,7 +1116,7 @@ var BattleMaster = BattleMaster || (function() {
             }
         }
         else{
-            log('HP 0');
+            //log('HP 0');
             if (vulnerabilitiesRaw != undefined && dmgType != "" && universalizeString(vulnerabilitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(2*dmgAmt));
                 if(state.bDeathMarkersPlusInstalled){
@@ -1115,7 +1125,7 @@ var BattleMaster = BattleMaster || (function() {
                 return;
             }
             else if (resistancesRaw != undefined && dmgType != "" && universalizeString(resistancesRaw).indexOf(universalizeString(dmgType)) != -1) {
-                log(targetCharacter.get('name') + " has resistance to " + dmgType +" damage!")
+                //log(targetCharacter.get('name') + " has resistance to " + dmgType +" damage!")
                 targetToken.set('bar3_value', targetToken.get('bar3_value') - Math.round(dmgAmt/2));
                 if(state.bDeathMarkersPlusInstalled){
                     Deathmarkers.UpdateDeathMarkers(targetToken);
