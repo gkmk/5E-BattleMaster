@@ -56,16 +56,14 @@ var BattleMaster = BattleMaster || (function() {
                 log("using OGL sheet");
                 this.bRequiresSavingThrow = (universalizeString(rollMsg.content).indexOf("saveattr") != -1);
                 r1Index = parseInt(stringBetween(rollMsg.content,"{{r1=$[[","]]"),10);
-                log('VRNIIII BATEEEEEEEE '+stringBetween(rollMsg.content,"{{r1=$[[","]]"))
                 if (stringBetween(rollMsg.content,"{{r2=$[[","]]") != "") {                    
                     r2Index = parseInt(stringBetween(rollMsg.content,"{{r2=$[[","]]"),10);
                 }
                 if (stringBetween(rollMsg.content,"{{dmg1=$[[","]]")!="") {
-                    log('SO VRAKAS BATEEEEEEEE '+stringBetween(rollMsg.content,"{{dmg1=$[[","]]"))
                     dmg1Index = parseInt(stringBetween(rollMsg.content,"{{dmg1=$[[","]]"),10);
                 }
                 if (stringBetween(rollMsg.content,"{{dmg2=$[[","]]")!="") {
-                    dmg2Index = parseInt(stringBetween(rollMsg.content,"{{dmg1=$[[","]]"),10);
+                    dmg2Index = parseInt(stringBetween(rollMsg.content,"{{dmg2=$[[","]]"),10);
                 }
                 if (stringBetween(rollMsg.content,"{{crit1=$[[","]]")!="") {
                     crit1Index = parseInt(stringBetween(rollMsg.content,"{{crit1=$[[","]]"),10);
