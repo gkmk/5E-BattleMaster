@@ -1078,8 +1078,9 @@ var BattleMaster = BattleMaster || (function() {
             //  NO  HP LEFT DEATH :O whwuahahahahaa
             targetToken.set('status_dead', true);
             // also give XP to the brave one :D
-            awardXP =( parseInt(currentTurnToken.get('bar2_value'),10)+ parseInt(getAttrByName(targetToken.get('represents'),'npc_xp'),10));
-            currentTurnToken.set('bar2_value', awardXP)
+            var awardXP =( parseInt(currentTurnToken.token.get('bar2_value'),10)+ parseInt(getAttrByName(targetToken.get('represents'),'npc_xp'),10));
+            currentTurnToken.token.set('bar2_value', awardXP)
+            spawnFx(currentTurnToken.token.get('left'), currentTurnToken.token.get('top'), 'bubbling-holy');
         }
 
     },
