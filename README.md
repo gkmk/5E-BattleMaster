@@ -27,7 +27,6 @@ In order to use AOE spells, you must slightly change the "range" variable of the
 5. Attempt to implement class-specific combat features for all base 5E classes
 6. Find a better way to get advantage and disadvantage factored into rolls
 7. Level up based on XP
-8. Manage ammo
 
 
 # Changelog
@@ -41,6 +40,7 @@ In order to use AOE spells, you must slightly change the "range" variable of the
 * Fixed FX on damage
 * Award XP
 * Prevent user from targeting dead target
+* Fix AOE spells
 
 ## V0.2
 * Added a bunch of objects to clarify code
