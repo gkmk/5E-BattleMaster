@@ -658,6 +658,7 @@ var BattleMaster = BattleMaster || (function() {
         }
         else{
             switch(args[1]){
+                case "cylinder": // cylinder will need to be separated but for now use the sphere thing....
                 case "cone": 
                     promptButtonArray("Select a direction", ["North","South","East","West","Northeast","Northwest","Southeast","Southwest"], 
                     ["up","down","right","left","upright","upleft","downright","downleft"], currentPlayerDisplayName);
@@ -673,14 +674,13 @@ var BattleMaster = BattleMaster || (function() {
                     responseCallbackFunction = lineDirectionPromptCallback;
                     range = args[2];
                  break;
+                case "cube": // cube will need to be separated but for now use the sphere thing....
                 case "sphere": 
                     var effectType = "burst-"+dmgTypeToFXName(rollData.dmgTypes[0]);
                     //log("Spawning fx: " + effectType);
                     spawnFx(x,y,effectType);
                     _.each(findAllTokensInSphere(createLocFromToken(currentTurnToken.token),args[2]), spellEffects)
                 break;
-                case "cube": break;
-                case "cylinder": break;
             }
         }
     },
