@@ -84,3 +84,57 @@
         "signature": false
     }
 ]
+
+rollMsg.content ={
+    {rname=Sleep
+    }
+} 0 {
+    {range=point-90 sphere20
+    }
+} {
+    {damage=1
+    }
+} {
+    {dmg1flag=1
+    }
+} {
+    {dmg1=$[
+            [
+                0
+            ]
+        ]
+    }
+} {
+    {dmg1type=Effect
+    }
+} 0 {
+    {dmg2=$[
+            [
+                1
+            ]
+        ]
+    }
+} {
+    {dmg2type=
+    }
+} 0 {
+    {desc=
+    }
+} {
+    {hldmg=$[
+            [
+                2
+            ]
+        ]
+    }
+} {
+    {spelllevel=1
+    }
+} {
+    {innate=
+    }
+} 0 {
+    {globaldamagetype=
+    }
+} ammo= charname=Alistair"
+"
