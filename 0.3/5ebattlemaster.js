@@ -1099,7 +1099,7 @@ var BattleMaster = BattleMaster || (function () {
                 targetToken.set('bar3_value', tempHP > 0 ? tempHP : 0);
             }
 
-            spawnFx(targetToken.token.get('left'), targetToken.token.get('top'), 'glow-blood');
+            spawnFx(targetToken.get('left'), targetToken.get('top'), 'glow-blood');
 
             if (tempHP <= 0) {
                 //  NO  HP LEFT DEATH :O whwuahahahahaa
@@ -1108,7 +1108,7 @@ var BattleMaster = BattleMaster || (function () {
                 var awardXP = (parseInt(currentTurnToken.token.get('bar2_value'), 10) + parseInt(getAttrByName(targetToken.get('represents'), 'npc_xp'), 10));
                 currentTurnToken.token.set('bar2_value', awardXP)
                 spawnFx(currentTurnToken.token.get('left'), currentTurnToken.token.get('top'), 'bubbling-holy');
-                spawnFx(targetToken.token.get('left'), targetToken.token.get('top'), 'bomb-blood');
+                spawnFx(targetToken.get('left'), targetToken.get('top'), 'bomb-blood');
             }
 
         },
