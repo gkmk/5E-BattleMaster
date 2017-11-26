@@ -170,8 +170,8 @@ var BattleMaster = BattleMaster || (function () {
         this.bHasTakenAction = false;
         this.bHasTakenBonusAction = false;
         this.bHasTakenReaction = false;
-        this.iMoveSpeedTotal = token.get('bar1_max');
-        this.iMoveSpeedRemaining = token.get('bar1_value');
+        this.iMoveSpeedTotal = token.get('bar3_max');
+        this.iMoveSpeedRemaining = token.get('bar3_value');
         this.name = token.get('name');
         this.ac = getAttrByName(token.get('represents'), 'npc_ac');
         if (this.ac === "" || this.ac === undefined) {
@@ -508,9 +508,9 @@ var BattleMaster = BattleMaster || (function () {
         },
 
         ResetTokenTurnValues = function (currentTurnTokenWrapper) {
-            currentTurnTokenWrapper.iMoveSpeedTotal = currentTurnToken.token.get('bar1_max');
+            currentTurnTokenWrapper.iMoveSpeedTotal = currentTurnToken.token.get('bar3_max');
             currentTurnTokenWrapper.iMoveSpeedRemaining = currentTurnTokenWrapper.iMoveSpeedTotal;
-            currentTurnTokenWrapper.token.set('bar1_val', currentTurnTokenWrapper.iMoveSpeedRemaining);
+            currentTurnTokenWrapper.token.set('bar3_val', currentTurnTokenWrapper.iMoveSpeedRemaining);
             iXStart = currentTurnTokenWrapper.token.get('left');
             iYStart = currentTurnTokenWrapper.token.get('top');
         },
@@ -1080,7 +1080,7 @@ var BattleMaster = BattleMaster || (function () {
             if (!resistancesRaw) { resistancesRaw = ""; }
             if (!vulnerabilitiesRaw) { vulnerabilitiesRaw = ""; }
 
-            var tempHP = targetToken.get('bar3_value');
+            var tempHP = targetToken.get('bar1_value');
             //log('TARGET HP = ' + tempHP);
             if (immunitiesRaw != undefined && dmgType != "" && universalizeString(immunitiesRaw).indexOf(universalizeString(dmgType)) != -1) {
                 sendChat('BattleMaster', "Target is immune to " + dmgType);
@@ -1096,7 +1096,7 @@ var BattleMaster = BattleMaster || (function () {
                     tempHP -= dmgAmt;
                 }
 
-                targetToken.set('bar3_value', tempHP > 0 ? tempHP : 0);
+                targetToken.set('bar1_value', tempHP > 0 ? tempHP : 0);
             }
 
             spawnFx(targetToken.get('left'), targetToken.get('top'), 'glow-blood');

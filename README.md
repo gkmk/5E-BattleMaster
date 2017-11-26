@@ -11,9 +11,9 @@ A roll20 API Script for DND 5e combat across the board, compatible with the 5E O
 1. Configure the script
     * type "!combat config"
 2. Your tokens (PC and NPC) must have:
-    * Bar1 = Speed
+    * Bar1 = HP
     * Bar2 = Experience (PC only)
-    * Bar3 = HP
+    * Bar3 = Speed
 3. All PC and NPC must be in Turn Order list
 4. To begin combat, the GM simply needs to type "!combat start". On each player's turn, they will be prompted with 4 options for actions. The players simply need to click a target if they're using a targeted action (such as a direct spell or a weapon attack) and then click the button of the action they want to accomplish, or simply click the button, in the cases of AOE Spell and Move. Then, every player needs to simply follow the instructions presented to them by the BattleMaster. Health is assumed to be in bar 3.
 ### AOE Spells
